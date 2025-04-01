@@ -168,11 +168,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         ),
                 ),
               ),
-              ElevatedButton(
-                  onPressed: () {
-                    pickBannerImage();
-                  },
-                  child: Text("Pick Image")),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                    onPressed: () {
+                      pickBannerImage();
+                    },
+                    child: Text("Pick Image")),
+              ),
               Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Divider(
