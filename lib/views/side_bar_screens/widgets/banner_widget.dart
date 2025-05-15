@@ -10,7 +10,6 @@ class BannerWidget extends StatefulWidget {
 }
 
 class _BannerWidgetState extends State<BannerWidget> {
-  //A Future that will hold the list of banners once loaded from the API
   late Future<List<BannerModel>> futurebanners;
 
   @override
@@ -21,38 +20,36 @@ class _BannerWidgetState extends State<BannerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: futurebanners,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            print(snapshot);
-            return Center(child: Text('An error occurred: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No banners available'));
-          } else {
-            final banners = snapshot.data!;
-            return GridView.builder(
-                shrinkWrap: true,
-                itemCount: banners.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 6, 
-                    crossAxisSpacing: 8, 
-                    mainAxisSpacing: 8
+    return FutureBuilder<List<BannerModel>>(
+      future: futurebanners,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('An error occurred: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text('No banners available'));
+        } else {
+          final banners = snapshot.data!;
+          return SizedBox(
+            height: 200, // 👈 ensure bounded height
+            child: PageView.builder(
+              itemCount: banners.length,
+              itemBuilder: (context, index) {
+                final banner = banners[index];
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.network(
+                    banner.image,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
                   ),
-                itemBuilder: (context, index) {
-                  final banner = banners[index];
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.network(
-                      banner.image,
-                      height: 100,
-                      width: 100,
-                    ),
-                  );
-                });
-          }
-        });
+                );
+              },
+            ),
+          );
+        }
+      },
+    );
   }
 }

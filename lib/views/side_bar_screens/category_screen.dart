@@ -120,12 +120,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           _categoryController.uploadCategory(
-                            name: categoryName,
-                            pickedImage:_image, 
-                            pickedBanner: _bannerImage,
-                            context: BuildContext
-                          );
+                              name: categoryName,
+                              pickedImage: _image,
+                              pickedBanner: _bannerImage,
+                              context: BuildContext);
                           print(categoryName);
+                          setState(() {
+                          _formKey.currentState!.validate();
+                          _image = null;
+                        });
                         } else {
                           // Show error message
                         }
